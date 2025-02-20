@@ -161,6 +161,7 @@ jobs:
       - run: brew pin mbedtls
       # NOTE: The above command may have installed a new version of Python, that's why we launch it weirdly
       - run: /usr/bin/env python3 -m pip install -r requirements.txt --break-system-packages
+      - run: ls -l /Library/Developer/CommandLineTools/SDKs/
       - run: env JAVA_HOME="$JAVA_HOME_17_X64" ./devconfig $MEM_CHECK_TOOL --without-analysis --no-examples -DWITH_VALGRIND_TRACK_ORIGINS=OFF -DWITH_URL_CHECK=OFF -DWITH_IPV6=OFF
       - run: LC_ALL=en_US.UTF-8 make -j
       - run: python3 --version
