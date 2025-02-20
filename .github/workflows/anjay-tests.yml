@@ -144,6 +144,7 @@ jobs:
       CXX: ${{ matrix.CXX }}
       COMPILER_VERSION: ${{ matrix.COMPILER_VERSION }}
       MEM_CHECK_TOOL: ${{ matrix.MEM_CHECK_TOOL }}
+      MBEDTLS_ROOT_DIR: "/opt/homebrew/opt/mbedtls"
     steps:
       # NOTE: v2 requires Git 2.18 for submodules, it's not present in the image
       - uses: actions/checkout@v1
