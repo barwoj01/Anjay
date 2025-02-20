@@ -161,6 +161,7 @@ jobs:
       - run: brew pin mbedtls
       - run: echo | $CC -xc -E -v -
       - run: echo | $CXX -xc -E -v -
+      - run: cat /opt/homebrew/etc/clang/arm64-apple-darwin23.cfg
       - run: brew list mbedtls
       # NOTE: The above command may have installed a new version of Python, that's why we launch it weirdly
       - run: /usr/bin/env python3 -m pip install -r requirements.txt --break-system-packages
