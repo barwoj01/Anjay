@@ -144,7 +144,6 @@ jobs:
       CXX: ${{ matrix.CXX }}
       COMPILER_VERSION: ${{ matrix.COMPILER_VERSION }}
       MEM_CHECK_TOOL: ${{ matrix.MEM_CHECK_TOOL }}
-      MBEDTLS_ROOT_DIR: "/opt/homebrew/opt/mbedtls"
     steps:
       # NOTE: v2 requires Git 2.18 for submodules, it's not present in the image
       - uses: actions/checkout@v1
@@ -152,7 +151,7 @@ jobs:
           submodules: recursive
       - run: brew update
       # NOTE: try the brew install command twice to work around "brew link" errors
-      - run: INSTALL_CMD="brew install python-setuptools openssl $COMPILER_VERSION"; $INSTALL_CMD || $INSTALL_CMD
+      - run: INSTALL_CMD="brew install python3 openssl $COMPILER_VERSION"; $INSTALL_CMD || $INSTALL_CMD
       # - run: echo 'export PATH="$(brew --prefix $COMPILER_VERSION)/bin:$PATH"' >> ~/.profile
       - run: env
       # NOTE: Some tests don't pass on mbedTLS 3.6.2 now, so we need to install an older version
@@ -160,10 +159,9 @@ jobs:
       - run: curl -f https://raw.githubusercontent.com/Homebrew/homebrew-core/219dabf6cab172fb8b62b4d8598e016e190c3c20/Formula/m/mbedtls.rb > /tmp/mbedtls.rb
       - run: brew install --formula /tmp/mbedtls.rb
       - run: brew pin mbedtls
-      - run: brew list mbedtls
       # NOTE: The above command may have installed a new version of Python, that's why we launch it weirdly
       - run: /usr/bin/env python3 -m pip install -r requirements.txt --break-system-packages
-      - run: env JAVA_HOME="$JAVA_HOME_17_X64" ./devconfig $MEM_CHECK_TOOL --without-analysis --no-examples -DWITH_VALGRIND_TRACK_ORIGINS=OFF -DWITH_URL_CHECK=OFF -DWITH_IPV6=OFF
+      - run: env JAVA_HOME="$JAVA_HOME_17_X64" ./devconfig $MEM_CHECK_TOOL --without-analysis --no-examples -DWITH_VALGRIND_TRACK_ORIGINS=OFF -DWITH_URL_CHECK=OFF -DWITH_IPV6=OFF -DMBEDTLS_ROOT_DIR=/opt/homebrew/opt/mbedtls
       - run: LC_ALL=en_US.UTF-8 make -j
       - run: LC_ALL=en_US.UTF-8 make check
     strategy:
