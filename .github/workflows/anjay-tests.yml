@@ -152,7 +152,6 @@ jobs:
       - run: brew update
       # NOTE: try the brew install command twice to work around "brew link" errors
       - run: INSTALL_CMD="brew install python3 openssl $COMPILER_VERSION"; $INSTALL_CMD || $INSTALL_CMD
-      - run: echo "$(brew --prefix $COMPILER_VERSION)/bin:$PATH" >> $GITHUB_PATH
       # - run: echo 'export PATH="$(brew --prefix $COMPILER_VERSION)/bin:$PATH"' >> ~/.profile
       - run: env
       # NOTE: Some tests don't pass on mbedTLS 3.6.2 now, so we need to install an older version
@@ -164,6 +163,7 @@ jobs:
       - run: /usr/bin/env python3 -m pip install -r requirements.txt --break-system-packages
       - run: env JAVA_HOME="$JAVA_HOME_17_X64" ./devconfig $MEM_CHECK_TOOL --without-analysis --no-examples -DWITH_VALGRIND_TRACK_ORIGINS=OFF -DWITH_URL_CHECK=OFF -DWITH_IPV6=OFF
       - run: LC_ALL=en_US.UTF-8 make -j
+      - run: python3 --version
       - run: LC_ALL=en_US.UTF-8 make check
     strategy:
       fail-fast: false
