@@ -149,16 +149,14 @@ jobs:
       - uses: actions/checkout@v1
         with:
           submodules: recursive
-      - run: python3 --version
       - run: brew update
-      - run: python3 --version
-      - run: echo $0
-      - run: sw_vers
       # NOTE: try the brew install command twice to work around "brew link" errors
-      - run: INSTALL_CMD="brew install python3 mbedtls openssl $COMPILER_VERSION"; $INSTALL_CMD || $INSTALL_CMD
-      - run: python3 --version
-      - run: env
-      - run: brew list --version mbedtls
+      - run: INSTALL_CMD="brew install python3 openssl ${COMPILER_VERSION:+$COMPILER_VERSION}"; $INSTALL_CMD || $INSTALL_CMD
+      # NOTE: Some tests don't pass on mbedTLS 3.6.2 now, so we need to install an older version
+      #       Homebrew only specifiers major version of mbedTLS, so let's pin the version to 3.6.0 manually
+      - run: curl -f https://raw.githubusercontent.com/Homebrew/homebrew-core/219dabf6cab172fb8b62b4d8598e016e190c3c20/Formula/m/mbedtls.rb > /tmp/mbedtls.rb
+      - run: brew install --formula /tmp/mbedtls.rb
+      - run: brew pin mbedtls
       # NOTE: The above command may have installed a new version of Python, that's why we launch it weirdly
       - run: /usr/bin/env python3 -m pip install -r requirements.txt --break-system-packages
       - run: env JAVA_HOME="$JAVA_HOME_17_X64" ./devconfig $MEM_CHECK_TOOL --without-analysis --no-examples -DWITH_VALGRIND_TRACK_ORIGINS=OFF -DWITH_URL_CHECK=OFF -DWITH_IPV6=OFF -DMBEDTLS_ROOT_DIR=/opt/homebrew/opt/mbedtls
@@ -178,5 +176,5 @@ jobs:
             MEM_CHECK_TOOL: --with-asan
           - CC: cc
             CXX: c++
-            COMPILER_VERSION:
             MEM_CHECK_TOOL: --with-asan
+          
