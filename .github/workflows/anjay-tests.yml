@@ -179,4 +179,4 @@ jobs:
           - CC: cc
             CXX: c++
             COMPILER_VERSION:
-            MEM_CHECK_TOOL: --without-memcheck
+            MEM_CHECK_TOOL: --with-asan
