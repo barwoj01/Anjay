@@ -266,6 +266,8 @@ Socket::Socket(shared_ptr<Context> context,
         throw mbedtls_error("mbedtls_ssl_config_defaults failed", result);
     }
 
+    mbedtls_ssl_conf_tls13_enable_signal_new_session_tickets(&config_, MBEDTLS_SSL_TLS1_3_SIGNAL_NEW_SESSION_TICKETS_ENABLED);
+
     if (context_->debug()) {
         mbedtls_ssl_conf_dbg(&config_, debug_mbedtls, NULL);
     }
